@@ -169,7 +169,8 @@ describe('get', function() {
 			name: 'C1',
 			description: 'Desc1',
 			numEmployees: 1,
-			logoUrl: 'http://c1.img'
+			logoUrl: 'http://c1.img',
+			jobs: expect.any(Array)
 		});
 	});
 
@@ -178,6 +179,7 @@ describe('get', function() {
 			await Company.get('nope');
 			fail();
 		} catch (err) {
+			console.log(err);
 			expect(err instanceof NotFoundError).toBeTruthy();
 		}
 	});

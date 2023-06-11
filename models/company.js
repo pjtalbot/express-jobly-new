@@ -122,6 +122,20 @@ FROM companies`;
 
 		if (!company) throw new NotFoundError(`No company: ${handle}`);
 
+		const jobs = await db.query(
+			`SELECT title,
+				salary,
+				equity
+			FROM jobs
+			WHERE company_handle = $1
+			`,
+			[ handle ]
+		);
+
+		console.log(jobs.rows);
+		console.log(company);
+		company.jobs = jobs.rows;
+
 		return company;
 	}
 

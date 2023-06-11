@@ -4,6 +4,7 @@ const request = require('supertest');
 
 const db = require('../db');
 const app = require('../app');
+const Job = require('../models/job');
 
 const { commonBeforeAll, commonBeforeEach, commonAfterEach, commonAfterAll, u1Token } = require('./_testCommon');
 
@@ -134,7 +135,8 @@ describe('GET /companies/:handle', function() {
 				name: 'C1',
 				description: 'Desc1',
 				numEmployees: 1,
-				logoUrl: 'http://c1.img'
+				logoUrl: 'http://c1.img',
+				jobs: expect.any(Array)
 			}
 		});
 	});
@@ -147,9 +149,28 @@ describe('GET /companies/:handle', function() {
 				name: 'C2',
 				description: 'Desc2',
 				numEmployees: 2,
-				logoUrl: 'http://c2.img'
+				logoUrl: 'http://c2.img',
+				jobs: expect.any(Array)
 			}
 		});
+		expect(resp.body.company.jobs.length).toEqual(0);
+	});
+
+	test('works for anon: company with jobs', async function() {
+		const jobResponse = await Job.create({ title: 'testC1Job', salary: 200, equity: null, companyHandle: 'c1' });
+		const resp = await request(app).get(`/companies/c1`);
+		expect(resp.body).toEqual({
+			company: {
+				handle: 'c1',
+				name: 'C1',
+				description: 'Desc1',
+				numEmployees: 1,
+				logoUrl: 'http://c1.img',
+				jobs: expect.any(Array)
+			}
+		});
+		console.log(resp.body.company.jobs);
+		expect(resp.body.company.jobs.length).toEqual(4);
 	});
 
 	test('not found for no such company', async function() {

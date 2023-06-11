@@ -18,6 +18,24 @@ class Job {
 	static async create(data) {
 		const { title, salary, equity, companyHandle } = data;
 
+		// checkDuplicate
+
+		// const isDuplicate = async (checkTitle, checkHandle) => {
+		// 	const duplicateQuery = `SELECT * FROM jobs
+		// 							WHERE title = $1
+		// 							AND companyHandle = $1`;
+
+		// 	const duplicateResult = await db.query(duplicateQuery, [ checkTitle, checkHandle ]);
+
+		// 	return duplicateResult.rows;
+		// };
+
+		// let duplicateCheck = await isDuplicate(title, companyHandle);
+
+		// if (!duplicateCheck[0]) {
+		// 	throw new BadRequestError('Job with same title and company already exists');
+		// }
+
 		const result = await db.query(
 			`
         INSERT INTO jobs (title,
